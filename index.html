@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive Finite Automata Simulator — Design and simulate DFA and NFA step-by-step with visual animations.">
+  <title>Finite Automata Simulator — DFA & NFA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <circle cx="14" cy="14" r="12" stroke="url(#logo-grad)" stroke-width="2.5"/>
+            <circle cx="14" cy="14" r="7" stroke="url(#logo-grad)" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <circle cx="14" cy="14" r="3" fill="url(#logo-grad)"/>
+            <defs><linearGradient id="logo-grad" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#22d3ee"/><stop offset="1" stop-color="#818cf8"/></linearGradient></defs>
+          </svg>
+        </div>
+        <h1>Finite Automata Simulator</h1>
+      </div>
+      <div class="header-center">
+        <div class="mode-toggle" id="mode-toggle">
+          <button class="mode-btn active" data-mode="DFA">DFA</button>
+          <button class="mode-btn" data-mode="NFA">NFA</button>
+          <div class="mode-slider"></div>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="icon-btn" id="btn-help" title="Help">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+      <!-- Left Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <!-- Tools Section -->
+        <section class="panel">
+          <h3 class="panel-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            Tools
+          </h3>
+          <div class="tool-grid">
+            <button class="tool-btn active" data-tool="select" title="Select & Move (V)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>
+              <span>Select</span>
+            </button>
+            <button class="tool-btn" data-tool="add-state" title="Add State (S)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              <span>State</span>
+            </button>
+            <button class="tool-btn" data-tool="add-transition" title="Add Transition (T)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              <span>Transition</span>
+            </button>
+            <button class="tool-btn" data-tool="delete" title="Delete (D)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              <span>Delete</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- State Properties -->
+        <section class="panel" id="state-properties" style="display:none;">
+          <h3 class="panel-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            State Properties
+          </h3>
+          <div class="property-group">
+            <label>Name</label>
+            <input type="text" id="state-name-input" class="input-field" placeholder="q0">
+          </div>
+          <div class="property-group">
+            <label class="toggle-label">
+              <input type="checkbox" id="state-start-check">
+              <span class="toggle-switch"></span>
+              Start State
+            </label>
+          </div>
+          <div class="property-group">
+            <label class="toggle-label">
+              <input type="checkbox" id="state-accept-check">
+              <span class="toggle-switch"></span>
+              Accept State
+            </label>
+          </div>
+        </section>
+
+        <!-- Examples Section -->
+        <section class="panel">
+          <h3 class="panel-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Examples
+          </h3>
+          <select id="example-select" class="input-field">
+            <option value="">Choose an example...</option>
+            <option value="dfa-ends-01">DFA: Strings ending in "01"</option>
+            <option value="dfa-even-zeros">DFA: Even number of 0s</option>
+            <option value="dfa-divisible-3">DFA: Binary divisible by 3</option>
+            <option value="nfa-contains-11">NFA: Contains "11"</option>
+            <option value="nfa-ends-ab">NFA: Ends with "ab"</option>
+          </select>
+          <button class="btn btn-secondary" id="btn-load-example" style="margin-top:8px;width:100%">Load Example</button>
+        </section>
+
+        <!-- Actions -->
+        <section class="panel">
+          <h3 class="panel-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Actions
+          </h3>
+          <button class="btn btn-secondary" id="btn-clear" style="width:100%">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Clear All
+          </button>
+          <button class="btn btn-secondary" id="btn-save" style="width:100%;margin-top:6px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Save Automaton
+          </button>
+          <button class="btn btn-secondary" id="btn-load" style="width:100%;margin-top:6px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Load Automaton
+          </button>
+          <input type="file" id="file-input" accept=".json" style="display:none">
+        </section>
+      </aside>
+
+      <!-- Canvas Area -->
+      <main class="canvas-area">
+        <div class="canvas-container" id="canvas-container">
+          <canvas id="automaton-canvas"></canvas>
+          <div class="canvas-hint" id="canvas-hint">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            <p>Select the <strong>State</strong> tool and click here to add states</p>
+          </div>
+        </div>
+        <!-- Simulation Controls Bar -->
+        <div class="sim-bar" id="sim-bar">
+          <div class="sim-input-group">
+            <label>Input String</label>
+            <div class="sim-input-wrapper">
+              <input type="text" id="input-string" class="input-field mono" placeholder='e.g. 01101'>
+              <span class="input-sigma">Σ*</span>
+            </div>
+          </div>
+          <div class="sim-buttons">
+            <button class="btn btn-primary" id="btn-simulate" title="Run full simulation">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Run
+            </button>
+            <button class="btn btn-accent" id="btn-step" title="Step through one symbol">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 15 12 5 21 5 3" fill="currentColor"/><line x1="19" y1="4" x2="19" y2="20"/></svg>
+              Step
+            </button>
+            <button class="btn btn-secondary" id="btn-reset" title="Reset simulation">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              Reset
+            </button>
+          </div>
+          <div class="sim-status" id="sim-status">
+            <div class="sim-step" id="sim-step-display"></div>
+            <div class="sim-current" id="sim-current-display"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Result Overlay -->
+    <div class="result-overlay" id="result-overlay" style="display:none;">
+      <div class="result-card" id="result-card">
+        <div class="result-icon" id="result-icon"></div>
+        <div class="result-text" id="result-text"></div>
+        <div class="result-details" id="result-details"></div>
+        <button class="btn btn-primary" id="btn-close-result">OK</button>
+      </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal-overlay" id="help-modal" style="display:none;">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>How to Use</h2>
+          <button class="modal-close" id="btn-close-help">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="help-section">
+            <h4>🎯 Getting Started</h4>
+            <p>Choose <strong>DFA</strong> or <strong>NFA</strong> mode from the header toggle.</p>
+          </div>
+          <div class="help-section">
+            <h4>➕ Adding States</h4>
+            <p>Select the <strong>State</strong> tool (or press <kbd>S</kbd>), then click on the canvas.</p>
+          </div>
+          <div class="help-section">
+            <h4>➡️ Adding Transitions</h4>
+            <p>Select the <strong>Transition</strong> tool (or press <kbd>T</kbd>), click a source state, then click a target state. Enter the transition symbol in the dialog.</p>
+          </div>
+          <div class="help-section">
+            <h4>⚙️ State Properties</h4>
+            <p>Use the <strong>Select</strong> tool and click a state to view and edit its properties (name, start state, accept state) in the sidebar.</p>
+          </div>
+          <div class="help-section">
+            <h4>▶️ Simulation</h4>
+            <p>Enter an input string and click <strong>Run</strong> to auto-play the simulation, or <strong>Step</strong> to go symbol-by-symbol.</p>
+          </div>
+          <div class="help-section">
+            <h4>⌨️ Keyboard Shortcuts</h4>
+            <table class="shortcuts-table">
+              <tr><td><kbd>V</kbd></td><td>Select tool</td></tr>
+              <tr><td><kbd>S</kbd></td><td>Add State tool</td></tr>
+              <tr><td><kbd>T</kbd></td><td>Add Transition tool</td></tr>
+              <tr><td><kbd>D</kbd></td><td>Delete tool</td></tr>
+              <tr><td><kbd>Delete</kbd></td><td>Delete selected</td></tr>
+              <tr><td><kbd>Esc</kbd></td><td>Cancel / Deselect</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transition Dialog -->
+    <div class="modal-overlay" id="transition-dialog" style="display:none;">
+      <div class="modal modal-sm">
+        <div class="modal-header">
+          <h2>Add Transition</h2>
+          <button class="modal-close" id="btn-close-transition">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p id="transition-info" class="transition-info"></p>
+          <div class="property-group">
+            <label>Symbol</label>
+            <input type="text" id="transition-symbol-input" class="input-field mono" placeholder="a" maxlength="5">
+            <small id="epsilon-hint" style="display:none;color:var(--accent-cyan);margin-top:4px;">Type 'e' or 'eps' for ε (epsilon)</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="btn-cancel-transition">Cancel</button>
+          <button class="btn btn-primary" id="btn-confirm-transition">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast container -->
+    <div class="toast-container" id="toast-container"></div>
+  </div>
+
+  <script type="module" src="js/automaton.js"></script>
+  <script type="module" src="js/renderer.js"></script>
+  <script type="module" src="js/simulator.js"></script>
+  <script type="module" src="js/examples.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
